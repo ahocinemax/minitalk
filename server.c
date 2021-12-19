@@ -14,12 +14,37 @@
 
 void	ft_act_one(int sig, siginfo_t *info, void *context)
 {
-	;
+	(void)sig;
+	(void)info;
+	(void)context;
+	if (!message.curr_bit)
+	{
+		message.curr_bit = 1 << 6;
+		++(message.curr_octet);
+	}
+	message.content[message.curr_octet] += message.curr_bit;
+	message.curr_bit >>= 1;
+	if (message.curr_octet == BUFFER_SIZE - 2 && !message.curr_bit)
+		message.overflow = TRUE;
 }
 
 void	ft_act_zero(int sig, siginfo_t *info, void *context)
 {
-	;
+	(void)sig;
+	(void)context;
+	if (!message.curr_bit)
+	{
+		message.curr_bit = 1 << 6;
+		++(message.curr_octet);
+	}
+	message.curr_bit >>= 1;
+	if (message.curr_octet == BUFFER_SIZE - 2 && !message.curr_bit)
+		message.overflow = TRUE;
+	else if (message.content[message.curr_octet] && !message.curr_bit)
+	{
+		message.complet = TRUE;
+		kill(info->si_pid, SIGUSR1);
+	}
 }
 
 _Bool	main_handler()
@@ -27,7 +52,17 @@ _Bool	main_handler()
 	while (1)
 	{
 		pause();
-
+		if (message.complet || message.overflow)
+		{
+			ft_putstr_fd(message.content, _STD_OUT);
+			ft_bzero(message.content, BUFFER_SIZE);
+			message.curr_octet = 0;
+			message.curr_bit = 1 << 6;
+			if (message.complet)
+				ft_putchar_fd('\n', _STD_OUT);
+			message.complet = FALSE;
+			message.overflow = FALSE;
+		}
 	}
 	return (TRUE);
 }
@@ -44,12 +79,10 @@ int	main(void)
 	if (!(sigaction(SIGUSR1, &act_one, NULL)))
 	{
 		ft_putstr_fd("signal error\n", _STD_OUT);
-		return (-1);
 	}
 	if (!(sigaction(SIGUSR2, &act_zero, NULL)))
 	{
 		ft_putstr_fd("signal error\n", _STD_OUT);
-		return (-1);
 	}
 	ft_putnbr_fd(getpid(), _STD_OUT);
 	ft_bzero(message.content, BUFFER_SIZE);

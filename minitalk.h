@@ -13,8 +13,6 @@
 #ifndef MINITALK_H
 # define MINITALK_H
 # include <signal.h>
-# include "/usr/include/asm-generic/siginfo.h"
-# include "/usr/include/x86_64-linux-gnu/bits/sigaction.h"
 # include <zconf.h>
 # include "../libft_private/libft.h"
 

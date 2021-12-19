@@ -40,6 +40,6 @@ typedef struct s_minitalk
 	_Bool	overflow;
 }			t_message;
 
-t_message	message = {{0}, 1 << 6, 0, FALSE, FALSE};
+t_message	g_message = {{0}, 1 << 6, 0, FALSE, FALSE};
 
 #endif

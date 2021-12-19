@@ -26,7 +26,6 @@ void	send_char(int pid, unsigned char byte)
 	counter = 1 << 6;
 	while (counter)
 	{
-		printf("c = %d\n", counter);
 		if (byte & counter)
 		{
 			if (kill(pid, SIGUSR1) < 0)
@@ -49,13 +48,13 @@ int	main(int argc, char *argv[])
 	char				*message;
 
 	if (argc != 3)
-		ft_putstr_fd("usage: ./client [server-pid] [message]\n", _STD_OUT);
+		ft_putstr_fd("usage: ./client [server pid] [message]\n", _STD_OUT);
 	act.sa_sigaction = ft_empty;
 	act.sa_flags = SA_SIGINFO;
 	server_pid = ft_atoi(argv[1]);
 	message = argv[2];
 	if (sigaction(SIGUSR1, &act, NULL) < 0)
-        return (-1);
+		return (-1);
 	while (*message)
 	{
 		send_char(server_pid, *message);

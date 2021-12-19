@@ -14,6 +14,7 @@
 # define MINITALK_H
 # include <signal.h>
 # include <zconf.h>
+# include <stdint.h>
 # include "../libft_private/libft.h"
 
 # ifndef	BUFFER_SIZE

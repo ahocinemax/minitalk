@@ -20,7 +20,7 @@ void	ft_act_one(int sig, siginfo_t *info, void *context)
 	if (!message.curr_bit)
 	{
 		message.curr_bit = 1 << 6;
-		++(message.curr_octet);
+		message.curr_octet++;
 	}
 	message.content[message.curr_octet] += message.curr_bit;
 	message.curr_bit >>= 1;
@@ -35,7 +35,7 @@ void	ft_act_zero(int sig, siginfo_t *info, void *context)
 	if (!message.curr_bit)
 	{
 		message.curr_bit = 1 << 6;
-		++(message.curr_octet);
+		message.curr_octet++;
 	}
 	message.curr_bit >>= 1;
 	if (message.curr_octet == BUFFER_SIZE - 2 && !message.curr_bit)

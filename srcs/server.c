@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "../includes/minitalk.h"
 
 void	ft_act_one(int sig, siginfo_t *info, void *context)
 {
@@ -84,7 +84,9 @@ int	main(void)
 	{
 		ft_putstr_fd("signal error\n", _STD_OUT);
 	}
+	ft_putstr_fd("Server PID : ", _STD_OUT);
 	ft_putnbr_fd(getpid(), _STD_OUT);
+	ft_putchar_fd('\n', _STD_OUT);
 	ft_bzero(g_message.content, BUFFER_SIZE);
 	main_handler();
 }

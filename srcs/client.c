@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+#include "../includes/minitalk.h"
 
 void	ft_empty(int sig, siginfo_t *info, void *context)
 {
@@ -37,7 +37,7 @@ void	send_char(int pid, unsigned char byte)
 				ft_putstr_fd("bad pid\n", _STD_OUT);
 		}
 		counter >>= 1;
-		usleep(600);
+		usleep(50);
 	}
 }
 
@@ -48,7 +48,12 @@ int	main(int argc, char *argv[])
 	char				*message;
 
 	if (argc != 3)
+	{
 		ft_putstr_fd("usage: ./client [server pid] [message]\n", _STD_OUT);
+		return (-1);
+	}
+	sigemptyset(&act.sa_mask);
+	ft_memset(&act, 0, sizeof(act));
 	act.sa_sigaction = ft_empty;
 	act.sa_flags = SA_SIGINFO;
 	server_pid = ft_atoi(argv[1]);

@@ -15,7 +15,7 @@
 # include <signal.h>
 # include <zconf.h>
 # include <stdint.h>
-# include "../libft_private/libft.h"
+# include "../libft/libft.h"
 
 # ifndef	BUFFER_SIZE
 #  define	BUFFER_SIZE		4096

@@ -1,25 +1,23 @@
 SERVER   = server
 CLIENT   = client
+HEADER	 = includes/minitalk.h
 CC	     = gcc
 FLAGS    = -Wall -Werror -Wextra
-LIBS	 = -L./libft -lft
-LIBFT	 = libft.a
+LIBFT	 = libft/libft.a
 
 all : $(LIBFT) $(SERVER) $(CLIENT)
 
 $(LIBFT) : 
 	@make -C libft
 
-$(SERVER) : main_server.o error.o includes/minitalk.h
-	@$(CC) main_server.o error.o $(LIBS) -o $@
+$(SERVER) : srcs/server.c $(HEADER)
+	@$(CC) $(FLAGS) srcs/server.c $(LIBFT) -o $@
 	@printf "\e[38;5;226m./$@ successfully build🥑\e[0m\n"
 
-$(CLIENT) : main_client.o error.o includes/minitalk.h
-	@$(CC) main_client.o error.o $(LIBS) -o $@
+$(CLIENT) : srcs/client.c $(HEADER)
+	@$(CC) $(FLAGS) srcs/client.c $(LIBFT) -o $@
 	@printf "\e[38;5;46m./$@ successfully build🥝\e[0m\n"
 
-%.o : %.c
-	@$(CC) $(FLAGS) $< -c -I includes
 
 clean :
 	@make clean -C libft

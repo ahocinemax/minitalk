@@ -18,7 +18,7 @@
 # include "../libft/libft.h"
 
 # ifndef	BUFFER_SIZE
-#  define	BUFFER_SIZE		4096
+#  define	BUFFER_SIZE		16384
 # endif
 
 # ifndef	FALSE
@@ -35,11 +35,12 @@ typedef struct s_minitalk
 {
 	char	content[BUFFER_SIZE];
 	int		curr_bit;
-	int		curr_octet;
+	int		curr_char;
 	_Bool	complet;
 	_Bool	overflow;
+	int		active;
 }			t_message;
 
-t_message	g_message = {{0}, 1 << 6, 0, FALSE, FALSE};
+t_message	g_message = {{0}, 1 << 6, 0, FALSE, FALSE, 1};
 
 #endif

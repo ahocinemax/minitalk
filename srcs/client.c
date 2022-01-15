@@ -12,14 +12,14 @@
 
 #include "../includes/minitalk.h"
 
-void	ft_empty(int sig, siginfo_t *info, void *context)
+static void	ft_void(int sig, siginfo_t *info, void *context)
 {
 	(void)sig;
 	(void)context;
 	(void)info;
 }
 
-void	send_char(int pid, unsigned char byte)
+static void	send_char(int pid, unsigned char byte)
 {
 	uint8_t	counter;
 
@@ -52,10 +52,10 @@ int	main(int argc, char *argv[])
 		ft_putstr_fd("usage: ./client [server pid] [message]\n", _STD_OUT);
 		return (-1);
 	}
-	sigemptyset(&act.sa_mask);
 	ft_memset(&act, 0, sizeof(act));
-	act.sa_sigaction = ft_empty;
+	act.sa_sigaction = ft_void;
 	act.sa_flags = SA_SIGINFO;
+	sigemptyset(&act.sa_mask);
 	server_pid = ft_atoi(argv[1]);
 	message = argv[2];
 	if (sigaction(SIGUSR1, &act, NULL) < 0)

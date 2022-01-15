@@ -12,7 +12,7 @@
 
 #include "../includes/minitalk.h"
 
-void	ft_act_one(int sig, siginfo_t *info, void *context)
+static void	ft_act_one(int sig, siginfo_t *info, void *context)
 {
 	(void)sig;
 	(void)info;
@@ -20,43 +20,43 @@ void	ft_act_one(int sig, siginfo_t *info, void *context)
 	if (!g_message.curr_bit)
 	{
 		g_message.curr_bit = 1 << 6;
-		g_message.curr_octet++;
+		g_message.curr_char++;
 	}
-	g_message.content[g_message.curr_octet] += g_message.curr_bit;
+	g_message.content[g_message.curr_char] += g_message.curr_bit;
 	g_message.curr_bit >>= 1;
-	if (g_message.curr_octet == BUFFER_SIZE - 2 && !g_message.curr_bit)
+	if (g_message.curr_char == BUFFER_SIZE - 2 && !g_message.curr_bit)
 		g_message.overflow = TRUE;
+	kill(info->si_pid, SIGUSR1);
 }
 
-void	ft_act_zero(int sig, siginfo_t *info, void *context)
+static void	ft_act_zero(int sig, siginfo_t *info, void *context)
 {
 	(void)sig;
 	(void)context;
 	if (!g_message.curr_bit)
 	{
 		g_message.curr_bit = 1 << 6;
-		g_message.curr_octet++;
+		g_message.curr_char++;
 	}
 	g_message.curr_bit >>= 1;
-	if (g_message.curr_octet == BUFFER_SIZE - 2 && !g_message.curr_bit)
+	if (g_message.curr_char == BUFFER_SIZE - 2 && !g_message.curr_bit)
 		g_message.overflow = TRUE;
-	else if (g_message.content[g_message.curr_octet] && !g_message.curr_bit)
-	{
+	else if (!g_message.content[g_message.curr_char] && !g_message.curr_bit)
 		g_message.complet = TRUE;
-		kill(info->si_pid, SIGUSR1);
-	}
+	kill(info->si_pid, SIGUSR1);
 }
 
-_Bool	main_handler(void)
+static _Bool	main_handler(void)
 {
-	while (1)
+	while (g_message.active)
 	{
 		pause();
+		usleep(50);
 		if (g_message.complet || g_message.overflow)
 		{
 			ft_putstr_fd(g_message.content, _STD_OUT);
 			ft_bzero(g_message.content, BUFFER_SIZE);
-			g_message.curr_octet = 0;
+			g_message.curr_char = 0;
 			g_message.curr_bit = 1 << 6;
 			if (g_message.complet)
 				ft_putchar_fd('\n', _STD_OUT);
@@ -76,17 +76,14 @@ int	main(void)
 	act_zero.sa_sigaction = ft_act_zero;
 	act_one.sa_flags = SA_SIGINFO;
 	act_zero.sa_flags = SA_SIGINFO;
-	if (!(sigaction(SIGUSR1, &act_one, NULL)))
-	{
+	if (sigaction(SIGUSR1, &act_one, NULL) < 0)
 		ft_putstr_fd("signal error\n", _STD_OUT);
-	}
-	if (!(sigaction(SIGUSR2, &act_zero, NULL)))
-	{
+	if (sigaction(SIGUSR2, &act_zero, NULL) < 0)
 		ft_putstr_fd("signal error\n", _STD_OUT);
-	}
 	ft_putstr_fd("Server PID : ", _STD_OUT);
 	ft_putnbr_fd(getpid(), _STD_OUT);
-	ft_putchar_fd('\n', _STD_OUT);
+	ft_putstr_fd("\nMessages :\n", _STD_OUT);
 	ft_bzero(g_message.content, BUFFER_SIZE);
 	main_handler();
+	return (0);
 }

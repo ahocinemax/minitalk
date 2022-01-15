@@ -40,7 +40,7 @@ static int	ft_init(int *a, int *b)
 
 static int	ft_malloc_arr(char ***arr, const char *str, char sep)
 {
-	int len;
+	int	len;
 
 	len = ft_cntline(str, sep);
 	if (len > 0)
@@ -50,16 +50,16 @@ static int	ft_malloc_arr(char ***arr, const char *str, char sep)
 	return (1);
 }
 
-static char	*ft_malloc_word(int size_line, const char *word_to_malloc, int *s_line)
+static char	*ft_malloc_word(int sline, const char *word_to_malloc, int *s_line)
 {
 	char	*dest;
 	int		i;
 
 	i = 0;
-	dest = (char *)malloc(size_line + 1);
+	dest = (char *)malloc(sline + 1);
 	if (!dest)
 		return (NULL);
-	while (word_to_malloc[i] && i < size_line)
+	while (word_to_malloc[i] && i < sline)
 	{
 		dest[i] = word_to_malloc[i];
 		i++;

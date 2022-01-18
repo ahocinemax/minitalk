@@ -37,7 +37,7 @@ static void	send_char(int pid, unsigned char byte)
 				ft_putstr_fd("bad pid\n", _STD_OUT);
 		}
 		counter >>= 1;
-		usleep(50);
+		usleep(100);
 	}
 }
 

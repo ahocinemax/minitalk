@@ -15,7 +15,6 @@
 static void	ft_act_one(int sig, siginfo_t *info, void *context)
 {
 	(void)sig;
-	(void)info;
 	(void)context;
 	if (!g_message.curr_bit)
 	{
@@ -51,7 +50,7 @@ static _Bool	main_handler(void)
 	while (g_message.active)
 	{
 		pause();
-		usleep(50);
+		usleep(100);
 		if (g_message.complet || g_message.overflow)
 		{
 			ft_putstr_fd(g_message.content, _STD_OUT);
